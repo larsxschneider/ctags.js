@@ -1,0 +1,6 @@
+[submodule "3rdParty/emscripten"]
+	path = 3rdParty/emscripten
+	url = git://github.com/larsxschneider/emscripten.git
+[submodule "3rdParty/ctags"]
+	path = 3rdParty/ctags
+	url = git://github.com/fishman/ctags.git
