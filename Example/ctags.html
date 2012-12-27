@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ctags.js</title>
+    <style>
+      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      textarea.emscripten { font-family: monospace; width: 80%; }
+      div.emscripten { text-align: center; }
+    </style>
+  </head>
+  <body>
+    
+    <div class="emscripten">
+
+      Examples:
+      <input type="button" value="Python" onclick="setURL('https://raw.github.com/kripken/emscripten/master/tools/shared.py')">
+      <input type="button" value="Objective C" onclick="setURL('https://raw.github.com/larsxschneider/ShowInGitHub/master/Source/Classes/SIGPlugin.m')">
+      <input type="button" value="Ruby" onclick="setURL('https://gist.github.com/raw/185789/b4431b9f82de56c47349d7054ae9a4992918b652/navajo.rb')">
+   
+      <form name="fileURLForm" action="javascript:parseURL()">
+        File URL: <input type="text" name="fileURL" size="128"><input type="submit">
+      </form>
+
+    </div>
+
+    <textarea class="emscripten" id="output" rows="25"></textarea>
+
+    <script type='text/javascript'>
+
+      function setURL(url) {
+        document.fileURLForm['fileURL'].value = url;
+        parseURL();
+      }
+
+      function parseURL() {
+        Module['CTags_parseFile'](document.fileURLForm['fileURL'].value);
+      }
+
+      var Module = {
+        print: (function() {
+          var element = document.getElementById('output');
+          element.value = ''; // clear browser cache
+          return function(text) {
+            element.value += text + "\n";
+            element.scrollTop = 99999; // focus on bottom
+          };
+        })(),
+      };
+    </script>      
+
+    <script type="text/javascript" src="../ctags.js"></script>
+
+  </body>
+</html>
