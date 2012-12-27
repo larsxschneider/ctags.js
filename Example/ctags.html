@@ -15,10 +15,15 @@
     <div class="emscripten">
 
       Examples:
-      <input type="button" value="Python" onclick="setURL('https://raw.github.com/kripken/emscripten/master/tools/shared.py')">
-      <input type="button" value="Objective C" onclick="setURL('https://raw.github.com/larsxschneider/ShowInGitHub/master/Source/Classes/SIGPlugin.m')">
-      <input type="button" value="Ruby" onclick="setURL('https://gist.github.com/raw/185789/b4431b9f82de56c47349d7054ae9a4992918b652/navajo.rb')">
-   
+      <input type="button" value="C" onclick="setURL('http://larsxschneider.github.com/ctags.js/Source/ctags-js.c')">
+      <input type="button" value="Javascript" onclick="setURL('http://larsxschneider.github.com/ctags.js/Source/ctags-glue.js')">
+     
+      <br>
+      <br>
+      <small>
+        Attention: If you are using Google Chrome you need to run it with "--disable-web-security" parameter to disable “Access-  Control-Allow-Origin” restrictions.
+      </small>
+
       <form name="fileURLForm" action="javascript:parseURL()">
         File URL: <input type="text" name="fileURL" size="128"><input type="submit">
       </form>
