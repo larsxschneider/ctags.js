@@ -68,8 +68,20 @@ set(ctags_js_files
   ctags-glue.js
 )
 
-include_directories("." "../3rdParty" "../3rdParty/ctags")
+# Make ctags options non-const in debug mode (e.g. to enable verbose logging)
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+    add_definitions(-DDEBUG -DOPTION_WRITE)
+
+    set(ctags_js_files
+        ${ctags_js_files}
+        ${CTAGS_SRC_DIR}/debug.c
+    )
+endif()
+
+# Tell ctags to read the config file
 add_definitions(-DHAVE_CONFIG_H)
+
+include_directories("." "../3rdParty" "../3rdParty/ctags")
 
 emscripten_add_js_library(${SRC_DIR}/ctags-glue.js)
 emscripten_export_functions(parseURL)

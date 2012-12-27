@@ -6,7 +6,22 @@
 #include <ctags/entry.h>
 #include <emscripten.h>
 
-//static langType getExtensionLanguage (const char *const extension);
+
+void initCtags()
+{
+	static int init = 0;
+	if (init)
+		return;
+	
+	init = 1;
+
+#ifdef DEBUG
+	Option.verbose = TRUE;
+#endif
+	initializeParsing();
+	initOptions();
+}
+
 
 void onLoaded(const char* file) {
   parseFile(file);
@@ -20,13 +35,7 @@ void onError(const char* file) {
 
 extern void parseURL(const char* url) __attribute__((used))
 {
-	static int init = 0;
-	if (!init)
-	{
-		init = 1;
-		initializeParsing();
-		initOptions();
-	}
+	initCtags();
 
 	langType language = getFileLanguage (url);
 	if (language == LANG_IGNORE || language == LANG_AUTO)
