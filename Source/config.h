@@ -54,10 +54,10 @@
 /* #undef HAVE_FINDFIRST */
 
 /* Define to 1 if you have the `fnmatch' function. */
-#define HAVE_FNMATCH 1
+// #define HAVE_FNMATCH 1
 
 /* Define to 1 if you have the <fnmatch.h> header file. */
-#define HAVE_FNMATCH_H 1
+// #define HAVE_FNMATCH_H 1
 
 /* Define to 1 if you have the `ftruncate' function. */
 /* #undef HAVE_FTRUNCATE */

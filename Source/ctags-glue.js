@@ -1,29 +1,17 @@
 var CTagsJSGlue = {
 
+    $ctagsJS__postset: 'Module["CTags_parseFile"] = ctagsJS.parseSourceFile;',
+
     $ctagsJS: {
-        position: 0,
-        line: 0,
-        content: null,
-        fileName: null,
-        languageID: -1,
-        regex: {}
-    },
+        regex: {},
 
-    generateCTags : function(url)
-    {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4) {
-                
-                ctagsJS.position = 0;
-                ctagsJS.content = xmlhttp.responseText;
+        parseSourceFile : function(url) {
+            var path = url.substr(0, url.lastIndexOf("/"));
+            Module["FS_createPath"]("/", path, true, true);
 
-                var urlPtr = allocate(intArrayFromString(url), 'i8', ALLOC_STACK)
-                Module['_parse'](urlPtr);
-            }
-        }
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send(null);
+            var urlPtr = allocate(intArrayFromString(url), 'i8', ALLOC_STACK);
+            Module['_parseURL'](urlPtr);
+        },
     },
 
     regcomp : function(preg, patternPtr, cflags) {
@@ -73,58 +61,6 @@ var CTagsJSGlue = {
 
     closeTagFile : function(resize) {
         console.log('closeTagFile');
-    },
-
-    fileOpen : function(fileNamePtr, language) {
-       // var fileName = Pointer_stringify(fileNamePtr);
-
-        ctagsJS.languageID = Module['_getFileLanguage'](fileNamePtr);
-
-        //console.log('fileOpen: ' + fileName + ' ' + lang);
-        return true;
-    },
-
-    fileClose : function() {
-        console.log('fileClose');
-    },
-
-    setContent : function(content) {
-        ctagsJS.content = content;
-        ctagsJS.position = 0;
-    },
-
-    fileReadLine : function() {        
-        var lines = ctagsJS.content.split('\n');
-        if (ctagsJS.line < lines.length) {
-            var line = lines[ctagsJS.line];
-            ctagsJS.line++;
-
-              //  getFileLanguage
-            // TODO: free!
-            var linePtr = allocate(intArrayFromString(line), 'i8', ALLOC_NORMAL);
-            Module['_matchRegexInCString'](linePtr, ctagsJS.languageID);
-            return linePtr;
-
-        } else {
-            return 0;
-        }
-    },
-
-    fileGetc: function() {
-        var c;
-        if (ctagsJS.position < ctagsJS.content.length) {
-            c = ctagsJS.content.charCodeAt(ctagsJS.position);
-            ctagsJS.position++;
-        } else {
-            c = -1; //EOF
-        }
-        return c;  
-    },
-
-    fileUngetc: function(c) {
-        ctagsJS.position--;
-        assert(ctagsJS.position >= 0);
-        assert(c == ctagsJS.content.charCodeAt(ctagsJS.position));
     }
 
 };

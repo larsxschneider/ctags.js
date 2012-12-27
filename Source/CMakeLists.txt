@@ -58,6 +58,7 @@ set(ctags_files
     ${CTAGS_SRC_DIR}/vstring.c
     ${CTAGS_SRC_DIR}/keyword.c
     ${CTAGS_SRC_DIR}/get.c
+    ${CTAGS_SRC_DIR}/read.c
  )
 
 set(ctags_js_files
@@ -71,6 +72,6 @@ include_directories("." "../3rdParty" "../3rdParty/ctags")
 add_definitions(-DHAVE_CONFIG_H)
 
 emscripten_add_js_library(${SRC_DIR}/ctags-glue.js)
-emscripten_export_functions(matchRegexInCString generateCTags parse getFileLanguage)
+emscripten_export_functions(parseURL)
 
 add_executable(ctags.js ${ctags_js_files})

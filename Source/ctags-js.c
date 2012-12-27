@@ -1,25 +1,56 @@
+#include <stdio.h>
+#include <string.h>
 #include <ctags/parse.h>
 #include <ctags/options.h>
 #include <ctags/read.h>
 #include <ctags/entry.h>
+#include <emscripten.h>
 
+//static langType getExtensionLanguage (const char *const extension);
 
-extern void generateCTags();
-
-// This functions must never be called. It's only purpose is to keep JS functions alive.
-void stayinAlive() __attribute__((used))
-{
-	assert(FALSE);
-	generateCTags();
+void onLoaded(const char* file) {
+  parseFile(file);
+  // TODO: Delete file?!
 }
 
 
-extern void parse(const char * filename) __attribute__((used))
-{
-	initializeParsing();
-	initOptions();
-	parseFile(filename);
+void onError(const char* file) {
 }
+
+
+extern void parseURL(const char* url) __attribute__((used))
+{
+	static int init = 0;
+	if (!init)
+	{
+		init = 1;
+		initializeParsing();
+		initOptions();
+	}
+
+	langType language = getFileLanguage (url);
+	if (language == LANG_IGNORE || language == LANG_AUTO)
+	{
+		printf("Unknown file extension: %s\n", url);
+		return;
+	}
+
+	FILE *file = fopen(url, "r");
+	if (file)
+	{
+     	fclose(file);
+      	onLoaded(url);
+  	}
+  	else
+  	{
+		emscripten_async_wget(
+    		url, 
+    		url,
+   			onLoaded,
+    		onError);
+  	}
+}
+
 
 extern void addTotals (
 	const unsigned int files, 
@@ -27,49 +58,16 @@ extern void addTotals (
     const long unsigned int bytes)
 {}
 
+
 extern boolean isDestinationStdout (void)
 {
 	return TRUE;
 }
 
-extern boolean matchRegexInCString(const char * line, const langType language)
-{
-	static vString *fileLine = NULL;
-
-	vString *result = NULL;
-	int i = 0;
-	int c;
-	if (fileLine == NULL)
-		fileLine = vStringNew ();
-	vStringClear (fileLine);
-	do
-	{
-		c = line[i++];
-		if (c != EOF)
-			vStringPut (fileLine, c);
-		if (c == '\0'  ||  (c == EOF  &&  vStringLength (fileLine) > 0))
-		{
-			vStringTerminate (fileLine);
-			if (vStringLength (fileLine) > 0)
-				matchRegex (fileLine, language);
-			result = fileLine;
-			break;
-		}
-	} while (c != EOF);
-	return result;
-}
-
 
 extern void makeTagEntry (const tagEntryInfo *const tag)
 {
-	printf("name %s\n", tag->name);
-	// printf("lineNumber %i\n", tag->lineNumber);
-	// printf("filePosition %i\n", tag->filePosition);
-	// printf("language %s\n", tag->language);
-	// printf("sourceFileName %s\n", tag->sourceFileName);
-	// printf("kindName %s\n", tag->kindName);
-	// printf("access %s\n", tag->extensionFields.access);
-	// printf("fileScope %s\n", tag->extensionFields.fileScope);
+	printf("%-40s %-10s %-5i %s\n", tag->name, tag->kindName, tag->lineNumber, tag->sourceFileName);
 }
 
 
