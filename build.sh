@@ -14,6 +14,12 @@ export EMSCRIPTEN_ROOT="$EMSCRIPTEN_DIR"
 rm -rf "$GENERATED_DIR"
 mkdir -p "$GENERATED_DIR"
 
+pushd "$BASE_DIR"
+  	git submodule sync
+  	echo "Updating submodules..."
+  	git submodule update --init --recursive
+popd
+
 pushd "$GENERATED_DIR"
 	cmake -DEMSCRIPTEN=1 \
 		  -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN_DIR/cmake/Platform/Emscripten_unix.cmake" \
