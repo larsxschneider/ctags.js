@@ -12,28 +12,33 @@ var CTagsJSGlue = {
             var urlPtr = allocate(intArrayFromString(url), 'i8', ALLOC_STACK);
             Module['_parseURL'](urlPtr);
         },
+
+        // Returns a Javascript string stored in a C pointer.
+        // We can't use `Pointer_stringify` because we might match ASCII characters greater 127
+        getASCIIString : function(pointer) {
+            var asciiString = '';
+            var i = 0;
+            var charCode;
+            while (charCode = {{{ makeGetValue('pointer', 'i', 'i8', 0, 1) }}}) {
+                asciiString += String.fromCharCode(charCode);
+                i++;
+            }
+            return asciiString;
+        },
     },
 
     regcomp : function(preg, patternPtr, cflags) {
         var flags = '';
         if (cflags & 2) flags += 'i';
 
-        // Read the pattern. We can't use `Pointer_stringify` because we might match ASCII characters greater 127
-        var pattern = '';
-        var i = 0;
-        var charCode;
-        while (charCode = {{{ makeGetValue('patternPtr', 'i', 'i8', 0, 1) }}}) {
-            pattern += String.fromCharCode(charCode);
-            i++;
-        }
+        var pattern = ctagsJS.getASCIIString(patternPtr);
         ctagsJS.regex[preg] = new RegExp(pattern, flags);
         
         return 0;
     },
     
     regexec : function(preg, stringPtr, nmatch, pmatch, eflags) {
-
-        var string = Pointer_stringify(stringPtr);
+        var string = ctagsJS.getASCIIString(stringPtr);
         var regex = ctagsJS.regex[preg];
 
         var results = regex.exec(string);
