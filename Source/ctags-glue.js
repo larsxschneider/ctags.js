@@ -1,8 +1,10 @@
 var CTagsJSGlue = {
 
-    $ctagsJS__postset: 'Module["CTags_parseFile"] = ctagsJS.parseSourceFile;',
+    $ctagsJS__postset: 'Module["CTags_parseFile"] = ctagsJS.parseSourceFile;' +
+                       'Module["CTags_setOnTagEntry"] = ctagsJS.setOnTagEntry;',
 
     $ctagsJS: {
+        onTagEntry: null,
         regex: {},
 
         parseSourceFile : function(url) {
@@ -11,6 +13,10 @@ var CTagsJSGlue = {
 
             var urlPtr = allocate(intArrayFromString(url), 'i8', ALLOC_STACK);
             Module['_parseURL'](urlPtr);
+        },
+
+        setOnTagEntry : function(func) {
+            ctagsJS.onTagEntry = func;
         },
 
         // Returns a Javascript string stored in a C pointer.
@@ -25,6 +31,15 @@ var CTagsJSGlue = {
             }
             return asciiString;
         },
+    },
+
+    pushTagEntry : function(name, kind, lineNumber, sourceFile) {
+        if (ctagsJS.onTagEntry)
+            ctagsJS.onTagEntry(
+                Pointer_stringify(name),
+                Pointer_stringify(kind),
+                lineNumber,
+                Pointer_stringify(sourceFile));
     },
 
     regcomp : function(preg, patternPtr, cflags) {

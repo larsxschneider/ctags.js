@@ -1,6 +1,7 @@
 var fs = require('fs');
 var ctags = require("../ctags.js");
 
+
 function parseFile(filenameWithPath) {
 	var content = fs.readFileSync(filenameWithPath);
 
@@ -13,4 +14,11 @@ function parseFile(filenameWithPath) {
 	ctags.Module['CTags_parseFile']('/' + filenameWithPath);
 }
 
+
+function onTagEntry(name, kind, lineNumber, sourceFile) {
+	console.log(name);
+}
+
+
+ctags.Module['CTags_setOnTagEntry'](onTagEntry);
 parseFile('3rdParty/emscripten/tools/shared.py');
