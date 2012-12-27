@@ -34,25 +34,24 @@
 
     <script type='text/javascript'>
 
+      function onTagEntry(name, kind, lineNumber, sourceFile) {
+        var element = document.getElementById('output');
+        element.value += name + ' ' + kind + ' ' + lineNumber + ' ' + sourceFile + '\n';
+      }
+
       function setURL(url) {
         document.fileURLForm['fileURL'].value = url;
         parseURL();
       }
 
       function parseURL() {
+        var element = document.getElementById('output');
+        element.value = ''; // clear browser cache
+
+        Module['CTags_setOnTagEntry'](onTagEntry);
         Module['CTags_parseFile'](document.fileURLForm['fileURL'].value);
       }
 
-      var Module = {
-        print: (function() {
-          var element = document.getElementById('output');
-          element.value = ''; // clear browser cache
-          return function(text) {
-            element.value += text + "\n";
-            element.scrollTop = 99999; // focus on bottom
-          };
-        })(),
-      };
     </script>      
 
     <script type="text/javascript" src="../ctags.js"></script>
