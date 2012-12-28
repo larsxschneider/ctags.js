@@ -33,13 +33,14 @@ var CTagsJSGlue = {
         },
     },
 
-    pushTagEntry : function(name, kind, lineNumber, sourceFile) {
+    pushTagEntry : function(name, kind, lineNumber, sourceFile, language) {
         if (ctagsJS.onTagEntry)
             ctagsJS.onTagEntry(
                 Pointer_stringify(name),
                 Pointer_stringify(kind),
                 lineNumber,
-                Pointer_stringify(sourceFile));
+                Pointer_stringify(sourceFile),
+                Pointer_stringify(language));
     },
 
     regcomp : function(preg, patternPtr, cflags) {

@@ -15,8 +15,8 @@ function parseFile(filenameWithPath) {
 }
 
 
-function onTagEntry(name, kind, lineNumber, sourceFile) {
-	console.log(name);
+function onTagEntry(name, kind, lineNumber, sourceFile, language) {
+	console.log(name + ' ' + kind + ' ' + lineNumber + ' ' + sourceFile + ' ' + language);
 }
 
 

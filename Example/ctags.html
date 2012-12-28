@@ -34,9 +34,9 @@
 
     <script type='text/javascript'>
 
-      function onTagEntry(name, kind, lineNumber, sourceFile) {
+      function onTagEntry(name, kind, lineNumber, sourceFile, language) {
         var element = document.getElementById('output');
-        element.value += name + ' ' + kind + ' ' + lineNumber + ' ' + sourceFile + '\n';
+        element.value += name + ' ' + kind + ' ' + lineNumber + ' ' + sourceFile + ' ' + language + '\n';
       }
 
       function setURL(url) {

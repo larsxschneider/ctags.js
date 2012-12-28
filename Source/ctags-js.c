@@ -6,7 +6,14 @@
 #include <ctags/entry.h>
 #include <emscripten.h>
 
-extern void pushTagEntry(char const * name, char const * kind, int lineNumber, char const * sourceFile);
+
+extern void pushTagEntry(
+	char const * name, 
+	char const * kind, 
+	int lineNumber, 
+	char const * sourceFile,
+	char const * language);
+
 
 void initCtags()
 {
@@ -80,7 +87,7 @@ extern void makeTagEntry (const tagEntryInfo *const tag)
 #ifdef DEBUG
 	printf("%-40s %-10s %-5i %s\n", tag->name, tag->kindName, tag->lineNumber, tag->sourceFileName);
 #endif
-	pushTagEntry(tag->name, tag->kindName, tag->lineNumber, tag->sourceFileName);
+	pushTagEntry(tag->name, tag->kindName, tag->lineNumber, tag->sourceFileName, tag->language);
 }
 
 
