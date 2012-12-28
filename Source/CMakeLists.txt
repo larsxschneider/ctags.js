@@ -84,7 +84,7 @@ add_definitions(-DHAVE_CONFIG_H)
 include_directories("." "../3rdParty" "../3rdParty/ctags")
 
 emscripten_add_js_library(${SRC_DIR}/ctags-glue.js)
-emscripten_export_functions(parseURL)
+emscripten_export_functions(parseURL getLanguage)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --pre-js \"${SRC_DIR}/pre.js\"")
 

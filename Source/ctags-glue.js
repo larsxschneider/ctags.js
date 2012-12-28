@@ -1,11 +1,18 @@
 var CTagsJSGlue = {
 
-    $ctagsJS__postset: 'Module["CTags_parseFile"] = ctagsJS.parseSourceFile;' +
+    $ctagsJS__postset: 'Module["CTags_getLanguage"] = ctagsJS.getLanguage;' +
+                       'Module["CTags_parseFile"] = ctagsJS.parseSourceFile;' +
                        'Module["CTags_setOnTagEntry"] = ctagsJS.setOnTagEntry;',
 
     $ctagsJS: {
         onTagEntry: null,
         regex: {},
+
+        getLanguage : function(url) {
+            var urlPtr = allocate(intArrayFromString(url), 'i8', ALLOC_STACK);
+            var langPtr = Module['_getLanguage'](urlPtr);
+            return Pointer_stringify(langPtr);
+        },
 
         parseSourceFile : function(url) {
             var path = url.substr(0, url.lastIndexOf("/"));

@@ -31,6 +31,13 @@ void initCtags()
 }
 
 
+extern const char * getLanguage(const char * url) __attribute__((used))
+{
+	initCtags();
+	return getLanguageName(getFileLanguage(url));
+}
+
+
 void onLoaded(const char* file) {
   parseFile(file);
   // TODO: Delete file?!
@@ -45,7 +52,7 @@ extern void parseURL(const char* url) __attribute__((used))
 {
 	initCtags();
 
-	langType language = getFileLanguage (url);
+	langType language = getFileLanguage(url);
 	if (language == LANG_IGNORE || language == LANG_AUTO)
 	{
 		printf("Unknown file extension: %s\n", url);

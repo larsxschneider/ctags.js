@@ -19,6 +19,8 @@ function onTagEntry(name, kind, lineNumber, sourceFile, language) {
 	console.log(name + ' ' + kind + ' ' + lineNumber + ' ' + sourceFile + ' ' + language);
 }
 
+var lang = ctags.Module['CTags_getLanguage']('3rdParty/emscripten/tools/shared.py');
+console.log('Language detected: ' + lang);
 
 ctags.Module['CTags_setOnTagEntry'](onTagEntry);
 parseFile('3rdParty/emscripten/tools/shared.py');
