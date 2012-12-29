@@ -14,6 +14,8 @@ extern void pushTagEntry(
 	char const * sourceFile,
 	char const * language);
 
+extern void parsingCompleted(char const * sourceFile);
+
 
 void initCtags()
 {
@@ -41,6 +43,7 @@ extern const char * getLanguage(const char * url) __attribute__((used))
 void onLoaded(const char* file) {
   parseFile(file);
   // TODO: Delete file?!
+  parsingCompleted(file);
 }
 
 

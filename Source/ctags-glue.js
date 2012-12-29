@@ -2,10 +2,12 @@ var CTagsJSGlue = {
 
     $ctagsJS__postset: 'Module["CTags_getLanguage"] = ctagsJS.getLanguage;' +
                        'Module["CTags_parseFile"] = ctagsJS.parseSourceFile;' +
+                       'Module["CTags_setOnParsingCompleted"] = ctagsJS.setOnParsingCompleted;' +
                        'Module["CTags_setOnTagEntry"] = ctagsJS.setOnTagEntry;',
 
     $ctagsJS: {
         onTagEntry: null,
+        onParsingCompleted: null,
         regex: {},
 
         getLanguage : function(url) {
@@ -24,6 +26,10 @@ var CTagsJSGlue = {
 
         setOnTagEntry : function(func) {
             ctagsJS.onTagEntry = func;
+        },
+
+        setOnParsingCompleted : function(func) {
+            ctagsJS.onParsingCompleted = func;
         },
 
         // Returns a Javascript string stored in a C pointer.
@@ -48,6 +54,11 @@ var CTagsJSGlue = {
                 lineNumber,
                 Pointer_stringify(sourceFile),
                 Pointer_stringify(language));
+    },
+
+    parsingCompleted : function(sourceFile) {
+        if (ctagsJS.onParsingCompleted)
+            ctagsJS.onParsingCompleted(Pointer_stringify(sourceFile));
     },
 
     regcomp : function(preg, patternPtr, cflags) {
@@ -81,16 +92,7 @@ var CTagsJSGlue = {
         };
 
         return (results ? 0 : 1); //REG_NOMATCH
-    },
-
-    openTagFile : function() {
-        console.log('openTagFile');
-    },
-
-    closeTagFile : function(resize) {
-        console.log('closeTagFile');
     }
-
 };
 
 autoAddDeps(CTagsJSGlue, '$ctagsJS');
